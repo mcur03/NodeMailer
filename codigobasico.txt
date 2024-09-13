@@ -1,0 +1,40 @@
+import express from 'express';
+import nodemailer from 'nodemailer';
+
+const app = express();
+app.use(express.json());
+const PORT = process.env.PORT || 3000;
+
+const useGmail = 'formy03081999@gmail.com';
+const passAppGmail = 'szlc zyvu nocw oxtl';
+
+// se crea la instancia de createTransport y contiene el tipo se servicio y la autenticación
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: useGmail,
+        pass: passAppGmail
+    }
+});
+
+// las opciones para enviar el email
+const mailOption = {
+    from: useGmail, //quien lo envia
+    to: 'mcur99.03@gmail.com', // quien lo recibe 
+    subject: 'Test Email 222', // el asunto
+    text: 'Este es un correo que envio des de formy pero en nodejs' // el contenido
+};
+
+// Ejecutar el tranporte para el envio del email
+transporter.sendMail(mailOption, (error, info)=>{
+    if(error){
+        console.error('Error: ', error);
+    }
+    console.log('Mensaje enviado', info.response);
+})
+
+app.listen(PORT, ()=>{
+    console.log('Servidor escuchando en el perto', PORT);
+}).on('error', (err: any) => {
+    throw new Error(err.message);
+})
